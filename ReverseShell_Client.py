@@ -5,7 +5,7 @@ import os
 import re
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = "192.168.1.8"
+host = "10.1.255.98"
 port = 1234
 s.connect((host, port))
 
